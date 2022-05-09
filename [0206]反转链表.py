@@ -15,21 +15,12 @@ class ListNode:
 #         return newHead
 
 
-# class Solution:
-#     def reverseList(self, head: ListNode) -> ListNode:
-#         pre = None
-#         while head:
-#             next = head.next
-#             head.next = pre
-#             pre = head
-#             head = next
-#         return pre
-
-def reverseList(head):
-    pre = None
-    while head:
-        next = head.next
-        head.next = pre
-        pre = head
-        head = next
-    return pre
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        pre = None
+        while head:
+            next = head.next
+            head.next = pre
+            pre = head
+            head = next
+        return pre
