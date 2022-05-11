@@ -142,3 +142,44 @@ def reverseList(head):
     return pre
 ```
 
+# [0215]数组中的第K个最大元素
+给定整数数组 $nums$ 和整数 $k$，请返回数组中第 $k$ 个最大的元素。
+请注意，你需要找的是数组排序后的第 $k$ 个最大的元素，而不是第$ k$ 个不同的元素。
+示例 1:
+```
+输入: [3,2,3,1,2,4,5,5,6] 和 k = 4
+输出: 4
+```
+```python
+def partition(left, right, nums):
+    i, baseNum = left, nums[right]
+    # < baseNum 右边界, > baseNum 左边界
+    l, r = left - 1, right + 1
+    while i < r:
+        if nums[i] == baseNum:
+            i += 1
+        elif nums[i] < baseNum:
+            l += 1
+            nums[l], nums[i] = nums[i], nums[l]
+            i += 1
+        else:
+            r -= 1
+            nums[i], nums[r] = nums[r], nums[i]
+    return l + 1, r - 1
+
+
+def findKthLargest(nums, k: int) -> int:
+    # 返回值的索引
+    k = len(nums) - k
+    # 快排的左右边界
+    left, right = 0, len(nums) - 1
+    # 已排序的左右边界
+    l, r = partition(left, right, nums)
+    while not l <= k <= r:
+        if k < l:
+            right = l - 1
+        else:
+            left = r + 1
+        l, r = partition(left, right, nums)
+    return nums[k]
+```
