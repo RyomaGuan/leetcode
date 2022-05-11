@@ -1,3 +1,18 @@
+# [0001]两数之和
+给定一个整数数组 $nums$ 和一个整数目标值 $target$，请你在该数组中找出和为目标值 $target$  的那两个整数，并返回它们的数组下标。
+- 你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。
+- 你可以按任意顺序返回答案。
+```python
+def twoSum(nums, target: int):
+    num2idx = dict()
+    for i in range(len(nums)):
+        if target - nums[i] in num2idx:
+            return [num2idx[target - nums[i]], i]
+        else:
+            num2idx[nums[i]] = i
+```
+
+
 # [0003]无重复字符的最长子串
 给定一个字符串 $s$ ，请你找出其中不含有重复字符的 最长子串 的长度。
 示例 1:
