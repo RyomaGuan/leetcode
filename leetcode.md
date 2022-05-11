@@ -51,6 +51,39 @@ def maxSubArray(nums):
     return maxTotal
 ```
 
+# [0021]合并两个有序链表
+将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 
+```python
+def mergeTwoLists(list1, list2):
+    head = p = ListNode()
+    p1, p2 = list1, list2
+    while p1 and p2:
+        if p1.val < p2.val:
+            p.next = p1
+            p1 = p1.next
+        else:
+            p.next = p2
+            p2 = p2.next
+        p = p.next
+    p.next = p1 if p1 else p2
+    return head.next
+```
+
+```python
+def mergeTwoLists(list1, list2):
+    if not list1:
+        return list2
+    if not list2:
+        return list1
+    if list1.val < list2.val:
+        list1.next = mergeTwoLists(list1.next, list2)
+        return list1
+    else:
+        list2.next = mergeTwoLists(list1, list2.next)
+        return list2
+```
+
+
 # [0146]LRU 缓存
 请你设计并实现一个满足 $LRU$ (最近最少使用) 缓存约束的数据结构。实现 $LRUCache$ 类：
 - $LRUCache(int capacity)$ 以 正整数 作为容量$ capacity$ 初始化 $LRU$ 缓存
