@@ -48,6 +48,79 @@ def lengthOfLongestSubstring(s):
     return maxLen
 ```
 
+# [0015]三数之和
+给你一个包含 $n$ 个整数的数组 $nums$，判断 $nums$ 中是否存在三个元素 $a$，$b$，$c$ ，使得 $a + b + c = 0$ ？请你找出所有和为 0 且不重复的三元组。
+- 答案中不可以包含重复的三元组。
+
+示例 1：
+```
+输入：nums = [-1,0,1,2,-1,-4]
+输出：[[-1,-1,2],[-1,0,1]]
+```
+```pyhton
+def threeSum(nums):
+    if len(nums) < 3:
+        return []
+    nums.sort()
+    i = 0
+    ans = []
+    while i < len(nums) - 2 and nums[i] <= 0:
+        j, k = i + 1, len(nums) - 1
+        while j < k:
+            if nums[j] + nums[k] > -nums[i]:
+                k -= 1
+            elif nums[j] + nums[k] < -nums[i]:
+                j += 1
+            else:
+                ans.append([nums[i], nums[j], nums[k]])
+                j += 1
+                k -= 1
+                while j < len(nums) and nums[j - 1] == nums[j]:
+                    j += 1
+                while k > i and nums[k + 1] == nums[k]:
+                    k -= 1
+        i += 1
+        while i < len(nums) and nums[i] == nums[i - 1]:
+            i += 1
+    return ans
+```
+
+
+# [0025]K 个一组翻转链表
+给你链表的头节点 $head$ ，每 $k$ 个节点一组进行翻转，请你返回修改后的链表。
+$k$ 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 $k$ 的整数倍，那么请将最后剩余的节点保持原有顺序。
+- 你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+
+示例 1：
+
+![img](leetcode.assets/reverse_ex1.jpg)
+```
+输入：head = [1,2,3,4,5], k = 2
+输出：[2,1,4,3,5]
+```
+```python
+def reverseKGroup(head, k: int):
+    nextHead = head
+    i = 0
+    while nextHead != None and i != k:
+        nextHead = nextHead.next
+        i += 1
+    if i != k:
+        return head
+    pre, cur = head, head.next
+    i = 1
+    while i < k:
+        next = cur.next
+        cur.next = pre
+        pre = cur
+        cur = next
+        i += 1
+    head.next = reverseKGroup(nextHead, k)
+    return pre
+```
+
+
+
 
 # [0053]最大子数组和
 给你一个整数数组 $nums$ ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
@@ -120,6 +193,129 @@ def mergeTwoLists(list1, list2):
         return list2
 ```
 
+# [0102]二叉树的层序遍历
+给你二叉树的根节点 $root$ ，返回其节点值的 层序遍历 。 （即逐层地，从左到右访问所有节点）。
+示例 1：
+![img](leetcode.assets/tree1.jpg)
+
+```
+输入：root = [3,9,20,null,null,15,7]
+输出：[[3],[9,20],[15,7]]
+```
+```python
+from collections import deque
+
+def levelOrder(root: TreeNode):
+    if root == None:
+        return []
+    dq = deque([root])
+    ans = []
+    while len(dq) > 0:
+        i = len(dq)
+        lst = []
+        while i > 0:
+            cur = dq.popleft()
+            lst.append(cur.val)
+            i -= 1
+            if cur.left != None:
+                dq.append(cur.left)
+            if cur.right != None:
+                dq.append(cur.right)
+        ans.append(lst)
+    return ans
+```
+
+```python
+from collections import deque
+
+def levelOrder(root: TreeNode):
+    if root == None:
+        return []
+    dq = deque([root])
+    ans = []
+    lst = []
+    last = nLast = root
+    while len(dq) > 0:
+        cur = dq.popleft()
+        lst.append(cur.val)
+        if cur.left != None:
+            dq.append(cur.left)
+            nLast = cur.left
+        if cur.right != None:
+            dq.append(cur.right)
+            nLast = cur.right
+        if cur == last:
+            ans.append(lst)
+            lst = []
+            last = nLast
+    return ans
+```
+
+# [0103]二叉树的锯齿形层序遍历
+给你二叉树的根节点 $root$ ，返回其节点值的 锯齿形层序遍历 。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+示例 1：
+![img](leetcode.assets/tree1-20220524105241374.jpg)
+
+```
+输入：root = [3,9,20,null,null,15,7]
+输出：[[3],[20,9],[15,7]]
+```
+
+```python
+def zigzagLevelOrder(root: TreeNode):
+    if not root:
+        return []
+    ans = []
+    left2rightStack = list([root])
+    right2leftStack = list()
+    while len(left2rightStack) > 0 or len(right2leftStack) > 0:
+        lst = []
+        if len(left2rightStack) > 0:
+            while len(left2rightStack) > 0:
+                node = left2rightStack.pop()
+                lst.append(node.val)
+                if node.left:
+                    right2leftStack.append(node.left)
+                if node.right:
+                    right2leftStack.append(node.right)
+        else:
+            while len(right2leftStack) > 0:
+                node = right2leftStack.pop()
+                lst.append(node.val)
+                if node.right:
+                    left2rightStack.append(node.right)
+                if node.left:
+                    left2rightStack.append(node.left)
+        ans.append(lst)
+    return ans
+```
+
+
+
+
+# [0141]环形链表
+给你一个链表的头节点 $head$ ，判断链表中是否有环。
+如果链表中有某个节点，可以通过连续跟踪 $next$ 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 $pos$ 来表示链表尾连接到链表中的位置（索引从 0 开始）。注意：$pos$ 不作为参数进行传递 。仅仅是为了标识链表的实际情况。
+如果链表中存在环 ，则返回 $true$ 。 否则，返回 $false$ 。
+示例 1：
+![img](leetcode.assets/circularlinkedlist.png)
+
+```
+输入：head = [3,2,0,-4], pos = 1
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点。
+```
+
+```python
+def hasCycle(head) -> bool:
+    p1 = p2 = head
+    while p1 and p1.next:
+        p1 = p1.next.next
+        p2 = p2.next
+        if p1 == p2:
+            return True
+    return False
+```
 
 # [0146]LRU 缓存
 请你设计并实现一个满足 $LRU$ (最近最少使用) 缓存约束的数据结构。实现 $LRUCache$ 类：
